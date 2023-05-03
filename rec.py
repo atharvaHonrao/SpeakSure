@@ -89,7 +89,6 @@ class RecScreen(Screen):
         self.ids.sec_counter.text = "00"
         self.ids.img.size_hint = 0.8,0.6
         self.index = self.index + 1
-        # self.c.append(Clock)
 
     def threading_rec(self,x):
         if x == 1:
@@ -137,8 +136,7 @@ class RecScreen(Screen):
         #             file.write(self.q.get())
 
         self.recording = True
-        # self.fileName = path.join("recordings", str(random.randint(1, 99999)) + ".wav") #"/recording/" + str(random.randint(1, 99999)) + ".wav"
-        # messagebox.showinfo(message="Recording Audio. Speak into the mic")
+
         with sf.SoundFile(self.filename, mode='w', samplerate=44100,
                         channels=1) as file:
             with sd.InputStream(samplerate=44100, channels=1, callback=self.callback):
@@ -177,10 +175,6 @@ class RecScreen(Screen):
         self.manager.current = "dash_screen"
 
     def detectFillers(self):
-        # filler_words = [
-        # 'um', 'uh', 'er', 'ah', 'like', 'you know', 'okay', 'so', 'well', 'actually', 
-        # 'basically', 'literally', 'totally', 'just', 'really', 'very', 'pretty', 'fairly', 
-        # 'quite', 'somewhat', 'more or less', 'kind of', 'sort of', 'maybe', 'perhaps']
 
         filler_words = [
         ' um ', ' uh ', ' er ', 'ah ', 'you know', 'so so', ' well ', 
@@ -204,14 +198,24 @@ class RecScreen(Screen):
             # self.reset()
 
     def predictModel(self):
-        # filler_words = [
-        # ' um ', ' uh ', ' er ', ' ah ', ' like ', ' you know ', ' okay ', ' so ', ' well ', 
-        # 'basically', 'literally', 'totally', 'just', 'really', 'very', 'pretty', 'fairly', 
-        # 'quite', 'somewhat', 'more or less', 'kind of', 'sort of', 'maybe', 'perhaps']
 
-        filler_words = [
-        'um', ' uh ', 'er', 'ah', 'you know', 'so so', ' well ', 
+        filler_words1 = [
+        'um','uh', 'ur','er', 'ah', 'you know', 'so so', ' well ', 'Ur','Uh','Er','Um','Ah',
         'basically', 'literally', 'somewhat', 'more or less', 'kind of', 'sort of', 'maybe', 'perhaps', 'right']
+
+        filler_words = []
+        for i in filler_words1:
+            h = " " + i + " "
+            filler_words.append(h)
+        for i in filler_words1:
+            h = i + "."
+            filler_words.append(h)
+        for i in filler_words1:
+            h = "." + i
+            filler_words.append(h)
+        for i in filler_words1:
+            h = i + ","
+            filler_words.append(h)
 
         features = t.extract_feature(self.filename, mfcc=True, chroma=True, mel=True)
         features = features.reshape(1,-1)
@@ -228,14 +232,11 @@ class RecScreen(Screen):
         r = self.transcripted_audio
         for word in filler_words:
             r = r.replace(word, '[color=ff3333]{}[/color]'.format(word))
-            # self.transcripted_audio = self.text.replace(word, '[color=ff3333]{}[/color]'.format(word))
         result_screen.ids.transcript.text = r
 
     def calculateScore(self):
         if self.prediction == "yes":
-            #calculate score
-            # self.score = 75 + (20 if self.pace in range(150, 250) else -20) - self.filler_count/2
-            # print(self.score)
+
             print("prev:",self.score)
             self.score = self.score + 60
             if self.pace>139 and self.pace<181:
@@ -267,14 +268,6 @@ class RecScreen(Screen):
         t3 = threading.Thread(target=self.message)
         t3.start()
         self.transcription()
-        # t2 = threading.Thread(target=self.transcription)
-        # t2.start()
-        # result = self.manager.get_screen('result_screen')
-        # result.ids.pace.text = str(int(self.pace))
-        # result.ids.filler.text = str(int(self.percent_filler))+"%"
-        # result.ids.score.text = str(int(self.score))
-
-        # while self.go_to:
 
         self.manager.current = "result_screen"
 

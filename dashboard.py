@@ -14,9 +14,23 @@ class DashScreen(Screen):
 
     def result(self,widget):
 
-        filler_words = [
-        ' um ', ' uh ', ' er ', 'ah ', 'you know', 'so so', ' well ', 
+        filler_words1 = [
+        'um','uh', 'ur','er', 'ah', 'you know', 'so so', ' well ', 'Ur','Uh','Er','Um','Ah',
         'basically', 'literally', 'somewhat', 'more or less', 'kind of', 'sort of', 'maybe', 'perhaps', 'right']
+
+        filler_words = []
+        for i in filler_words1:
+            h = " " + i + " "
+            filler_words.append(h)
+        for i in filler_words1:
+            h = i + "."
+            filler_words.append(h)
+        for i in filler_words1:
+            h = "." + i
+            filler_words.append(h)
+        for i in filler_words1:
+            h = i + ","
+            filler_words.append(h)
 
         client = mn.MongoClient(constr)
         db = client.grid_file
@@ -32,19 +46,18 @@ class DashScreen(Screen):
         self.percent_filler = metadata["percent_filler"]
         print(self.percent_filler)
 
+        r = self.transcript
         result = self.manager.get_screen('result_screen')
+
+        for word in filler_words:
+            r = r.replace(word, '[color=ff3333]{}[/color]'.format(word))
+        result.ids.transcript.text = r
+
+        
         result.ids.pace.text = str(int(self.pace))
         result.ids.filler.text = str(int(self.percent_filler))+"%"
         result.ids.score.text = str(int(self.score))
         # result.ids.pace.text = str(self.pace)
-
-        r = self.transcript
-
-        for word in filler_words:
-            r = r.replace(word, '[color=ff3333]{}[/color]'.format(word))
-            # self.transcripted_audio = self.text.replace(word, '[color=ff3333]{}[/color]'.format(word))
-
-        result.ids.transcript.text = r
 
         # result.ids.p = self.pace
         self.manager.current = 'result_screen'    

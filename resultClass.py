@@ -35,7 +35,7 @@ class ResultScreen(Screen):
         client = mn.MongoClient(constr)
         db = client.grid_file
         temp = "temp.wav"
-        file_location = "C:/Users/Atharva Honrao/Desktop/SpeakSure/python-mpr/gui/recordings/" + temp
+        file_location = "C:/Users/Atharva Honrao/Desktop/SpeakSure/recordings/" + temp
 
         file_data = open(file_location,"rb")
 
