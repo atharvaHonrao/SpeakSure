@@ -185,7 +185,7 @@ class RecScreen(Screen):
             count += self.transcripted_audio.lower().count(word)
         self.filler_count = count
 
-        self.percent_filler = self.filler_count/self.numOfWords*100
+        self.percent_filler = self.filler_count/(self.numOfWords+1)*100
         # print("percent:",self.percent_filler)
         print("percent_filler:",self.percent_filler)
 
